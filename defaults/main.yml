@@ -1,0 +1,31 @@
+---
+rpc_snooper_service_name: 'json-rpc-snoop'
+rpc_snooper_service_path: '/docker/{{ rpc_snooper_service_name }}'
+rpc_snooper_compose_path: '{{ rpc_snooper_service_path }}/docker-compose.yml'
+
+# configuration
+rpc_snooper_cont_tag: '0.2'
+rpc_snooper_cont_image: 'harbor.status.im/status-im/json-rpc-snoop:{{ rpc_snooper_cont_tag }}'
+rpc_snooper_cont_name: '{{ rpc_snooper_service_name }}'
+rpc_snooper_cont_addr: '0.0.0.0'
+rpc_snooper_cont_port: 8700
+rpc_snooper_el_port: 8551
+rpc_snooper_endpoint: 'http://host-gateway:{{ rpc_snooper_el_port }}'
+# rpc_snooper_suppress_methods: []
+# rpc_snooper_suppress_paths: []
+
+# Consul config
+rpc_snooper_consul_service_name: '{{ rpc_snooper_service_name }}'
+rpc_snooper_consul_scope: 'main'
+rpc_snooper_consul_default_tags:
+  - 'json-rpc-snoop'
+  - 'logs'
+  - 'scope:{{ rpc_snooper_consul_scope }}'
+  - '{{ env }}.{{ stage }}'
+rpc_snooper_consul_extra_tags: []
+rpc_snooper_consul_tags: '{{ rpc_snooper_consul_default_tags + rpc_snooper_consul_extra_tags }}'
+
+# general container management
+compose_recreate: 'auto'
+compose_state: 'present'
+compose_pull: 'always'
