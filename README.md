@@ -32,3 +32,13 @@ rpc_snooper_suppress_methods:
 rpc_snooper_suppress_paths:
   - "/engine/v1/events"
 ```
+
+## Docker Image
+
+The Docker image is built locally using a Dockefile included in this role and then pushed to our Harbor instance.
+```bash
+docker build -t harbor.status.im/status-im/json-rpc-snoop:0.2 .
+docker push harbor.status.im/status-im/json-rpc-snoop:0.2
+```
+
+> **Warning:** There is currently no automation pipeline for building this image.
