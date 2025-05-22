@@ -1,0 +1,25 @@
+[Unit]
+Description=JSON RPC Snooper on {{ beacon_node_network }} network {{ beacon_node_repo_branch }}
+After=network.target
+
+[Service]
+User={{ rpc_snooper_user }}
+Group={{ rpc_snooper_group }}
+SyslogIdentifier={{ rpc_snooper_service_name }}
+SyslogFacility=local6
+SyslogLevel=debug
+Restart=on-failure
+ExecStart=/usr/local/bin/json_rpc_snoop \
+  --no-color \
+  --bind-address {{ rpc_snooper_bind_addr }} \
+  --port {{ rpc_snooper_service_port }} \
+{% for method in rpc_snooper_suppress_methods %}
+  --suppress-method {{ method }} \
+{% endfor %}
+{% for path in rpc_snooper_suppress_paths %}
+  --suppress-path {{ path }} \
+{% endfor %}
+  {{ rpc_snooper_endpoint }}
+
+[Install]
+WantedBy=multi-user.target
