@@ -2,17 +2,15 @@
 - name: Create Consul service definition
   include_role: name=infra-role-consul-service
   vars:
-    consul_config_name: '{{ rpc_snooper_cont_name }}'
+    consul_config_name: '{{ rpc_snooper_service_name }}'
     consul_services:
       # Prometheus config expects this service name
-      - id:   '{{ rpc_snooper_cont_name }}'
+      - id:   '{{ rpc_snooper_service_name }}'
         name: '{{ rpc_snooper_consul_service_name }}'
         tags: '{{ rpc_snooper_consul_tags }}'
-        port: '{{ rpc_snooper_cont_port }}'
+        port: '{{ rpc_snooper_service_port }}'
         address: '{{ ansible_local.wireguard.vpn_ip }}'
-        meta:
-          container: '{{ rpc_snooper_cont_name | mandatory }}'
         checks:
-          - id: '{{ rpc_snooper_cont_name }}-health'
+          - id: '{{ rpc_snooper_service_name }}-health'
             type: 'tcp'
-            tcp: 'localhost:{{ rpc_snooper_cont_port }}'
+            tcp: 'localhost:{{ rpc_snooper_service_port }}'

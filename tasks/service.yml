@@ -1,0 +1,29 @@
+---
+- name: Check if json_rpc_snoop binary exists
+  stat:
+    path: "/usr/local/bin/json_rpc_snoop"
+  register: json_rpc_snoop_bin
+
+- name: Copy json_rpc_snoop binary
+  copy:
+    src: 'json_rpc_snoop'
+    dest: /usr/local/bin/json_rpc_snoop
+    mode: '0755'
+    owner: '{{ rpc_snooper_user }}'
+    group: '{{ rpc_snooper_group }}'
+  when: not json_rpc_snoop_bin.stat.exists
+
+- name: Create systemd Unit file
+  template:
+    src: 'rpc-snooper.service.j2'
+    dest: '/etc/systemd/system/{{ rpc_snooper_service_name }}.service'
+    mode: 0644
+
+- name: Reload systemctl
+  command: systemctl daemon-reload
+
+- name: Restart the service
+  service:
+    name: '{{ rpc_snooper_service_name }}.service'
+    state: 'restarted'
+    enabled: true

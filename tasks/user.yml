@@ -1,0 +1,6 @@
+---
+- name: Create user for rpc snooper service
+  user:
+    name: '{{ rpc_snooper_user }}'
+    group: '{{ rpc_snooper_group }}'
+    shell: '/bin/bash'
